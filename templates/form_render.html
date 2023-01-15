@@ -1,0 +1,211 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static '\css/main.css' %}" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Collect</title>
+
+ 
+  </head>
+  <body>
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <a class="navbar-brand" href="/">Collect</a>
+          <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            {% if not request.user.is_authenticated %}
+            <li class="nav-item active">
+              <a class="nav-link" href="/accounts/register">Register <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/accounts/login">Login <span class="sr-only">(current)</span></a>
+              </li>
+              {% endif %}
+              {% if request.user.is_authenticated %}
+              <li class="nav-item active">
+                <a class="nav-link" href="/accounts/login">Hello {{request.user}} <span class="sr-only">(current)</span></a>
+                
+               </li>
+              <li><a class="btn btn-outline-danger " href="/accounts/logout" style="color:white;">Logout</a></li>
+              {% endif %}
+
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-warning  my-2 my-sm-0" type="submit">Search</button>
+          </form>
+
+        </div>
+      </nav>
+
+
+      <div class="container ps-3 pt-3">
+        <form id = "myForm" action = "/save_response/{{form_data.id}}" method="post" onsubmit="clearCache()">
+          {% csrf_token %}
+          <div class="container ps-3 pt-3">
+            <div class="card">
+              <div class="card-header">
+                <b><center>{{form_data.title}}</center></b>
+              </div>
+              <div class="card-body">
+                <p class="card-text"><p><i>{{form_data.description}}</i></p></p>
+
+              </div>
+            </div>
+          </div>
+
+          {% for que in form_data.questions %}
+          <div class="container ps-3 pt-3">
+            <div class="card">
+              <div class="card-header">
+                <b>Question : {{ forloop.counter }}  </b>
+              </div>
+              
+
+              <div class="card-body">
+                <label for="que_{{forloop.counter}}_{{que.pk}}" class="card-text" >{{que.question}}</label>
+              
+
+                {% if que.question_type is 1 %}
+                  
+                    {% for choice in que.choices.all %}
+                    <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text">
+                          <input type="radio"  name="que_{{forloop.parentloop.counter}}_{{que.pk}}"  value="{{choice.choice}}" oninput="cacheInput(this)" id="que_{{forloop.parentloop.counter}}_{{que.pk}}" >
+                        </div>
+                      </div>
+                      <button class="form-control" disabled><span style="text-align:left; display:block">{{choice.choice}}</span></button>
+                    </div>
+
+
+
+                    {% endfor %}
+
+                {% endif %}
+
+
+                {% if que.question_type is 2 %}
+                    <input type="date" name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" class="form-control" id="que_{{forloop.counter}}_{{que.pk}}" placeholder="date">
+
+                {% endif %}
+                {% if que.question_type is 3 %}
+                    <input type="time" name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" class="form-control" id="que_{{forloop.counter}}_{{que.pk}}" placeholder="time">
+
+                {% endif %}
+                {% if que.question_type is 4 %}
+                  <select name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" id="que_{{forloop.counter}}_{{que.pk}}">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                  
+                {% endif %}
+                {% if que.question_type is 5 %}
+                  
+                    <input type="range" name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" class="form-range" id="que_{{forloop.counter}}_{{que.pk}}">
+                {% endif %}
+                {% if que.question_type is 6 %}
+                    <input type="Location" name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" class="form-control" id="que_{{forloop.counter}}_{{que.pk}}" placeholder="Location">
+                  
+                {% endif %}
+
+                {% if que.question_type is 7 %}
+                    <input type="telNo" name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" class="form-control" id="que_{{forloop.counter}}_{{que.pk}}" placeholder="Phone">
+                {% endif %}
+
+                {% if que.question_type is 8 %}
+                <input type="email" name="que_{{forloop.counter}}_{{que.pk}}" oninput="cacheInput(this)" class="form-control" id="que_{{forloop.counter}}_{{que.pk}}" placeholder="Email">
+                {% endif %}
+
+              </div>
+
+              
+            </div>
+          </div>
+          {% endfor %}
+
+
+          <center><input type="submit" class="btn btn-primary mt-3" value="submit"></center>
+
+
+        </form>
+
+        <br>
+        <br>
+
+      </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+        <script>
+
+          function cacheInput(e) {
+            console.log(e.value)
+            localStorage.setItem(e.attributes["name"].value, e.value)
+            
+        }
+
+
+        function dataLoad(id_name) {
+          console.log(id_name)
+          if (localStorage.getItem(id_name) !== null) {
+              var inputParse = localStorage.getItem(id_name);
+
+              var field = document.getElementById(id_name);
+
+              if(field.type == 'radio' || field.type == 'checkbox'){
+                  var field = document.getElementsByName(id_name);
+                  for (let j = 0; j < field.length; j++) {
+
+                    if(field[j].value==inputParse){
+                      field[j].checked = inputParse;
+                    }
+                  }
+                  
+              }else{
+                  field.value = inputParse;
+              }
+
+          }
+      }
+
+        window.onload = function () {
+
+
+          var keyarr = Object.keys(localStorage);
+          for (let i = 0; i < localStorage.length; i++) {
+            dataLoad(keyarr[i]);
+          }
+
+
+
+      }
+
+      function clearCache() {
+        localStorage.clear()
+    }
+
+        </script>
+
+ 
+
+
+
+
+  </body>
+</html>

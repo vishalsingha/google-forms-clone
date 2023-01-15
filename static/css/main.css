@@ -1,0 +1,11 @@
+body {
+    background-color: red;
+}
+
+.heading{
+    color: rgb(235, 90, 7);
+}
+
+.qtype{
+    border: 1px solid;
+}
