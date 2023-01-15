@@ -1,4 +1,4 @@
-**Collect Portal for Atlan Assignment**
+# google-forms-clone
 
 Process of Installation
 
@@ -14,4 +14,4 @@ Process of Installation
 7. Register a new user and login.
 8. Click on create form to create form.
 9. Fill the form . Download Response.
-# google-forms-clone
+
